@@ -69,7 +69,7 @@ print("[END]")
 print("Final Score:", score)
 
 
-# 🔥 OPENENV API SERVER (FINAL)
+# 🔥 OPENENV API SERVER (FINAL FIXED)
 class Handler(BaseHTTPRequestHandler):
 
     def _set_headers(self):
@@ -78,14 +78,14 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        # ✅ ROOT ENDPOINT (FIXED)
-        if self.path == "/":
+        # ✅ HANDLE ROOT + QUERY PARAMS (/ or /?anything)
+        if self.path == "/" or self.path.startswith("/?"):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(b"Email RL Environment Running")
 
-        # ✅ STATE ENDPOINT
-        elif self.path == "/state":
+        # ✅ STATE ENDPOINT (also supports query params)
+        elif self.path.startswith("/state"):
             self._set_headers()
             self.wfile.write(json.dumps(env.state()).encode())
 
@@ -93,12 +93,14 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
-        if self.path == "/reset":
+        # ✅ RESET ENDPOINT
+        if self.path.startswith("/reset"):
             self._set_headers()
             state = env.reset()
             self.wfile.write(json.dumps(state).encode())
 
-        elif self.path == "/step":
+        # ✅ STEP ENDPOINT
+        elif self.path.startswith("/step"):
             content_length = int(self.headers['Content-Length'])
             body = self.rfile.read(content_length)
             data = json.loads(body)
