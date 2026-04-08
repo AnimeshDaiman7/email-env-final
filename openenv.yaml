@@ -1,0 +1,7 @@
+name: email-env
+description: Email classification environment
+
+actions:
+  - spam
+  - important
+  - normal
