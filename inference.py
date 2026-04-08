@@ -1,5 +1,7 @@
 import os
+import json
 from env import EmailEnv
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # OPTIONAL: OpenAI client
 try:
@@ -17,9 +19,7 @@ print("[START]")
 def llm_agent(email):
     prompt = f"""
     Classify this email into one of: spam, important, normal.
-
     Email: {email}
-
     Answer only one word.
     """
 
@@ -33,7 +33,6 @@ def llm_agent(email):
 
 def smart_agent(email):
     email = email.lower()
-
     if "win" in email or "free" in email:
         return "spam"
     elif "meeting" in email or "deadline" in email:
@@ -42,6 +41,7 @@ def smart_agent(email):
         return "normal"
 
 
+# RUN BASELINE (IMPORTANT FOR LOGS)
 state = env.reset()
 done = False
 total_reward = 0
@@ -63,8 +63,57 @@ while not done:
     print("Action:", action)
     print("Reward:", reward)
 
-# FINAL SCORE
 score = max(0, min(1, total_reward / steps))
 
 print("[END]")
 print("Final Score:", score)
+
+
+# 🔥 OPENENV API SERVER (FINAL)
+class Handler(BaseHTTPRequestHandler):
+
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+
+    def do_GET(self):
+        if self.path == "/state":
+            self._set_headers()
+            self.wfile.write(json.dumps(env.state()).encode())
+        else:
+            self.send_error(404)
+
+    def do_POST(self):
+        if self.path == "/reset":
+            self._set_headers()
+            state = env.reset()
+            self.wfile.write(json.dumps(state).encode())
+
+        elif self.path == "/step":
+            content_length = int(self.headers['Content-Length'])
+            body = self.rfile.read(content_length)
+            data = json.loads(body)
+
+            action = data.get("action", "normal")
+
+            state, reward, done, _ = env.step(action)
+
+            response = {
+                "state": state,
+                "reward": reward,
+                "done": done
+            }
+
+            self._set_headers()
+            self.wfile.write(json.dumps(response).encode())
+
+        else:
+            self.send_error(404)
+
+
+port = 7860
+server = HTTPServer(("0.0.0.0", port), Handler)
+
+print(f"Server running on port {port}")
+server.serve_forever()
