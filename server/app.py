@@ -52,7 +52,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
 
 
-def app():
+def main():
     port = 7860
     server = HTTPServer(("0.0.0.0", port), Handler)
     print(f"Server running on port {port}")
