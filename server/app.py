@@ -62,3 +62,6 @@ def main():
     server = HTTPServer(("0.0.0.0", port), Handler)
     print(f"Server running on port {port}")
     server.serve_forever()
+
+if __name__ == "__main__":
+    main()
