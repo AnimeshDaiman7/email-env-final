@@ -1,3 +1,12 @@
+---
+title: Email RL Environment
+emoji: 📧
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # 📧 Email Classification RL Environment (OpenEnv)
 
 ## 🚀 Overview
