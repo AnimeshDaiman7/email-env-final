@@ -1,7 +1,7 @@
 name: email-env
-description: Email classification environment
+description: Email classification RL environment
 
-actions:
-  - spam
-  - important
-  - normal
+endpoints:
+  reset: /reset
+  step: /step
+  state: /state
