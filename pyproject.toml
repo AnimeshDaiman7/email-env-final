@@ -11,4 +11,4 @@ where = ["."]
 include = ["server*"]
 
 [project.scripts]
-server = "server.app:main"
+server = "server.main:main"
