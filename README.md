@@ -1,3 +1,4 @@
+force rebuild
 ---
 title: Email RL Environment
 emoji: 📧
@@ -6,7 +7,6 @@ colorTo: purple
 sdk: docker
 pinned: false
 ---
-force rebuild
 
 # 📧 Email Classification RL Environment (OpenEnv)
 
