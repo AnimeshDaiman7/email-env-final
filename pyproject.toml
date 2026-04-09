@@ -1,9 +1,14 @@
 [project]
 name = "email-env"
 version = "0.1.0"
+
 dependencies = [
     "openenv>=0.2.0"
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["server*"]
 
 [project.scripts]
 server = "server.app:main"
