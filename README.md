@@ -6,6 +6,7 @@ colorTo: purple
 sdk: docker
 pinned: false
 ---
+force rebuild
 
 # 📧 Email Classification RL Environment (OpenEnv)
 
